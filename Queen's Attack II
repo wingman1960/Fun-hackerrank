@@ -1,0 +1,71 @@
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
+
+# Complete the queensAttack function below.
+def queensAttack(n, k, r_q, c_q, obstacles):
+    pathList = [0]*8
+    pathList[0] =  (r_q - 1)
+    pathList[1] =  (n - r_q)
+    pathList[2] =  (c_q - 1)
+    pathList[3] =  (n - c_q)
+    pathList[4] =  min(n - c_q, r_q - 1)
+    pathList[5] =  min(n - r_q, c_q - 1)
+    pathList[6] =  min(n - c_q, n - r_q)
+    pathList[7] =  min(r_q - 1, c_q - 1)
+    
+    diff = [0]*2
+    print (obstacles)
+    for o in obstacles:
+        diff[0] = o[0] - r_q
+        diff[1] = o[1] - c_q
+        if diff[1] == 0 and diff[0] < 0:
+            pathList[0] = min(abs(diff[0]) - 1 , pathList[0])
+        if diff[1] == 0 and diff[0] > 0:
+            pathList[1] = min(abs(diff[0])- 1, pathList[1])        
+        if diff[1] < 0 and diff[0] == 0:
+            pathList[2] = min(abs(diff[1])- 1, pathList[2])              
+        if diff[1] > 0 and diff[0] == 0:
+            pathList[3] = min(abs(diff[1])- 1, pathList[3])
+        if diff[1] == diff[0]:
+            if diff[1] < 0:
+                pathList[7] = min(abs(diff[1])- 1, pathList[7])
+            if diff[1] > 0:
+                pathList[6] = min(abs(diff[1])- 1, pathList[6])
+        if diff[1] == -diff[0]:
+            if diff[1] < 0:
+                pathList[5] = min(abs(diff[1])- 1, pathList[5])
+            if diff[1] > 0:
+                pathList[4] = min(abs(diff[1])- 1, pathList[4])        
+    
+    return sum(pathList)
+    
+if __name__ == '__main__':
+    fptr = open(os.environ['OUTPUT_PATH'], 'w')
+
+    nk = input().split()
+
+    n = int(nk[0])
+
+    k = int(nk[1])
+
+    r_qC_q = input().split()
+
+    r_q = int(r_qC_q[0])
+
+    c_q = int(r_qC_q[1])
+
+    obstacles = []
+
+    for _ in range(k):
+        obstacles.append(list(map(int, input().rstrip().split())))
+
+    result = queensAttack(n, k, r_q, c_q, obstacles)
+
+    fptr.write(str(result) + '\n')
+
+    fptr.close()
